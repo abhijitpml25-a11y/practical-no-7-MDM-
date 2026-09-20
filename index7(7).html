@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Interactive FAQ (CM25002)</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f172a, #1e40af);
+            color: #1e293b;
+            padding: 40px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header .badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        .header h1 {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        /* FAQ Box */
+        .faq-container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+        }
+
+        .faq-item {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+
+        .faq-item:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 5px 20px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Question Button */
+        .question {
+            width: 100%;
+            border: none;
+            background: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            text-align: left;
+            font-size: 16px;
+            font-weight: bold;
+            color: #1e293b;
+            cursor: pointer;
+        }
+
+        .question:hover {
+            background: #f8fafc;
+        }
+
+        .question:focus {
+            outline: 3px solid #bfdbfe;
+        }
+
+        .question-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .number {
+            width: 38px;
+            height: 38px;
+            min-width: 38px;
+            border-radius: 50%;
+            background: #dbeafe;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .icon {
+            font-size: 24px;
+            color: #2563eb;
+            transition: transform 0.3s;
+        }
+
+        /* Answer */
+        .answer {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.35s ease,
+                        opacity 0.25s ease;
+        }
+
+        .answer-content {
+            padding: 0 20px 20px 73px;
+            color: #64748b;
+            line-height: 1.7;
+        }
+
+        /* Active FAQ */
+        .faq-item.active {
+            border-color: #3b82f6;
+        }
+
+        .faq-item.active .question {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .faq-item.active .number {
+            background: #2563eb;
+            color: white;
+        }
+
+        .faq-item.active .answer {
+            max-height: 250px;
+            opacity: 1;
+        }
+
+        .faq-item.active .icon {
+            transform: rotate(45deg);
+        }
+
+        /* Help Box */
+        .help-box {
+            margin-top: 25px;
+            padding: 22px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            text-align: center;
+        }
+
+        .help-box h3 {
+            color: #1e3a8a;
+            margin-bottom: 7px;
+        }
+
+        .help-box p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .footer {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 13px;
+            margin-top: 25px;
+            line-height: 1.6;
+        }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+
+            body {
+                padding: 25px 12px;
+            }
+
+            .header h1 {
+                font-size: 30px;
+            }
+
+            .faq-container {
+                padding: 18px;
+            }
+
+            .question {
+                padding: 16px;
+                font-size: 14px;
+            }
+
+            .number {
+                width: 32px;
+                height: 32px;
+                min-width: 32px;
+            }
+
+            .answer-content {
+                padding: 0 16px 16px 63px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Header -->
+        <header class="header">
+
+            <div class="badge">
+                STUDENT HELP PORTAL
+            </div>
+
+            <h1>Frequently Asked Questions</h1>
+
+            <p>
+                Find quick answers to common questions about
+                academics, labs, examinations and college activities.
+            </p>
+
+        </header>
+
+
+        <!-- FAQ Container -->
+        <div class="faq-container">
+
+            <!-- FAQ 1 -->
+            <div class="faq-item">
+
+                <button class="question" aria-expanded="false">
+
+                    <span class="question-left">
+
+                        <span class="number">01</span>
+
+                        <span>
+                            How can I check my examination timetable?
+                        </span>
+
+                    </span>
+
+                    <span class="icon">+</span>
+
+                </button>
+
+                <div class="answer">
+
+                    <div class="answer-content">
+                        The examination timetable is usually published
+                        through the college notice board and official
+                        communication channels. Students should regularly
+                        check for updates before examinations.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- FAQ 2 -->
+            <div class="faq-item">
+
+                <button class="question" aria-expanded="false">
+
+                    <span class="question-left">
+
+                        <span class="number">02</span>
+
+                        <span>
+                            Where can I find my lab manuals?
+                        </span>
+
+                    </span>
+
+                    <span class="icon">+</span>
+
+                </button>
+
+                <div class="answer">
+
+                    <div class="answer-content">
+                        Lab manuals can be obtained from the respective
+                        subject faculty or the department's official
+                        learning resources. Students should complete
+                        the required experiments before submission.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- FAQ 3 -->
+            <div class="faq-item">
+
+                <button class="question" aria-expanded="false">
+
+                    <span class="question-left">
+
+                        <span class="number">03</span>
+
+                        <span>
+                            How do I submit a practical assignment?
+                        </span>
+
+                    </span>
+
+                    <span class="icon">+</span>
+
+                </button>
+
+                <div class="answer">
+
+                    <div class="answer-content">
+                        Complete the practical work according to the
+                        instructions given by the faculty. Submit the
+                        required source code, screenshots and documentation
+                        through the specified submission method.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- FAQ 4 -->
+            <div class="faq-item">
+
+                <button class="question" aria-expanded="false">
+
+                    <span class="question-left">
+
+                        <span class="number">04</span>
+
+                        <span>
+                            What should I do if I miss a practical?
+                        </span>
+
+                    </span>
+
+                    <span class="icon">+</span>
+
+                </button>
+
+                <div class="answer">
+
+                    <div class="answer-content">
+                        Contact the respective faculty as soon as possible
+                        and ask about the procedure for completing the
+                        missed practical or attending a make-up session.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- FAQ 5 -->
+            <div class="faq-item">
+
+                <button class="question" aria-expanded="false">
+
+                    <span class="question-left">
+
+                        <span class="number">05</span>
+
+                        <span>
+                            How can I prepare for a viva?
+                        </span>
+
+                    </span>
+
+                    <span class="icon">+</span>
+
+                </button>
+
+                <div class="answer">
+
+                    <div class="answer-content">
+                        Understand the objective, theory, source code,
+                        important functions and output of your practical.
+                        Practice explaining each major step of the program
+                        in your own words.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- FAQ 6 -->
+            <div class="faq-item">
+
+                <button class="question" aria-expanded="false">
+
+                    <span class="question-left">
+
+                        <span class="number">06</span>
+
+                        <span>
+                            Where can I get help with programming?
+                        </span>
+
+                    </span>
+
+                    <span class="icon">+</span>
+
+                </button>
+
+                <div class="answer">
+
+                    <div class="answer-content">
+                        You can approach the respective subject faculty,
+                        lab instructor or use the recommended learning
+                        resources provided by the department.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Help Box -->
+            <div class="help-box">
+
+                <h3>Still Need Help?</h3>
+
+                <p>
+                    Contact your faculty or department coordinator
+                    for further assistance.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Footer -->
+        <div class="footer">
+
+            Web Fundamentals and Basic Frontend Design Lab
+            (N-MDMWD301P)
+
+            <br>
+
+            Department of Computer Science & Engineering,
+            S.B.J.I.T.M.R., Nagpur
+
+            <br>
+
+            Academic Year 2026-27
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        // Select all FAQ question buttons
+        const questions =
+            document.querySelectorAll(".question");
+
+
+        // Add click event to every question
+        questions.forEach(function(question) {
+
+            question.addEventListener("click", function() {
+
+                // Find the parent FAQ item
+                const faqItem =
+                    question.parentElement;
+
+
+                // Find the answer using DOM traversal
+                const answer =
+                    question.nextElementSibling;
+
+
+                // Check current state
+                const isActive =
+                    faqItem.classList.contains("active");
+
+
+                // Close all other FAQ items
+                document.querySelectorAll(".faq-item")
+                    .forEach(function(item) {
+
+                        item.classList.remove("active");
+
+                        item.querySelector(".question")
+                            .setAttribute("aria-expanded", "false");
+
+                    });
+
+
+                // Open clicked FAQ if it was previously closed
+                if (!isActive) {
+
+                    faqItem.classList.toggle("active");
+
+                    question.setAttribute(
+                        "aria-expanded",
+                        "true"
+                    );
+
+                }
+
+            });
+
+        });
+
+    </script>
+
+</body>
+
+</html>
